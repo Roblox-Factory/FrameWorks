@@ -1,8 +1,10 @@
 local CorePlayer = game.Players.LocalPlayer
 local CorePlayerGui = CorePlayer.PlayerGui
 local tweenService = game:GetService("TweenService")
-
+CorePlayer.CharacterAdded:Wait()
+local Humanoid = CorePlayer.Character:WaitForChild("Humanoid")
 local isRunning = false
+
 
 local function runLoop()
 	while isRunning do
@@ -37,7 +39,15 @@ local function AddGui()
 	local modifyradius3 = Instance.new("UICorner")
 	local modifyradius4 = Instance.new("UICorner")
 	local modifygradience = Instance.new("UIGradient")
+	local ToggleBackFrame = Instance.new("Frame")
+	local ToggleBack = Instance.new("TextButton")
+	local title2 = Instance.new("TextLabel")
+	local exit = Instance.new("TextButton")
+	local exitdesc = Instance.new("TextLabel")
 	
+	ToggleBackFrame.Visible = false
+	ToggleBack.Parent = ToggleBackFrame
+	title2.Parent = ToggleBackFrame
 	
 	modifyradius1.CornerRadius = UDim.new(0, 16)
 	modifyradius2.CornerRadius = UDim.new(0, 16)
@@ -120,6 +130,54 @@ local function AddGui()
 	toggleonbtnslider.BackgroundColor3 = Color3.new(0.192157, 0.192157, 0.192157)
 	modifyradius4.Parent = toggleonbtnslider
 	
+	exit.Name = "Exit"
+	exit.Parent = MainFrame
+	exit.Size = UDim2.new(0.13, 0,0.17, 0)
+	exit.Position = UDim2.new(-0, 0, 0, 0)
+	exit.BackgroundColor3 = Color3.new(0, 0, 0)
+	exit.Text = ""
+	exit.BackgroundTransparency = 1
+	
+	exitdesc.Name = "ExitDesc"
+	exitdesc.Parent = exit
+	exitdesc.Size = UDim2.new(1,0,0.862,0)
+	exitdesc.Position = UDim2.new(0,0,-0.055,0)
+	exitdesc.TextScaled = true
+	exitdesc.Text = "X"
+	exitdesc.BackgroundTransparency = 1
+	exitdesc.TextColor3 = Color3.new(0,0,0)
+	
+	ToggleBackFrame.BackgroundColor3 = Color3.new(1, 0.717647, 0.0588235)
+	ToggleBackFrame.Parent = ScreenGui
+	ToggleBackFrame.Size = UDim2.new(0.296, 0, 0.1, 0)
+	ToggleBackFrame.Position = UDim2.new(0.704,0,0.935,0)
+	
+	title2.Name = "Title"
+	title2.Parent = ToggleBackFrame
+	title2.Size = UDim2.new(0.885, 0, 0.73, 0)
+	title2.Position = UDim2.new(0.05, 0, -0, 0)
+	title2.TextColor3 = Color3.new(0,0,0)
+	title2.BackgroundTransparency = 1
+	title2.Text = "FrameWorks - Roblox Talent Show"
+	title2.TextScaled = true
+	
+	ToggleBack.Name = "ToggleBackMenu"
+	ToggleBack.Parent = ToggleBackFrame
+	ToggleBack.BackgroundTransparency = 1
+	ToggleBack.Text = ""
+	ToggleBack.Size = UDim2.new(1,0,0.491,0)
+	ToggleBack.Position = UDim2.new(-0,0,0.156,0)
+	ToggleBack.Font = Enum.Font.SourceSansBold
+	
+	
+	ToggleBack.MouseButton1Click:Connect(function()
+		MainFrame.Visible = true
+		ToggleBackFrame.Visible = false
+	end)
+	exit.MouseButton1Click:Connect(function()
+		MainFrame.Visible = false
+		ToggleBackFrame.Visible = true
+	end)
 	toggleoffbtnslider.MouseButton1Click:Connect(function()
 		local originalPosition = toggleoffbtnslider.Position
 		local tweenInfo = TweenInfo.new(0.26, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
@@ -153,4 +211,80 @@ local function AddGui()
 	end)
 end
 
+
+-- Function to create and animate the full-screen window with smooth text animations
+local function createWindow()
+	-- Create a new ScreenGui
+	local screenGui = Instance.new("ScreenGui")
+	screenGui.Parent = CorePlayerGui
+	screenGui.Name = "WindowGui"
+
+	-- Create a Frame (the full-screen window, completely black)
+	local window = Instance.new("Frame")
+	window.Size = UDim2.new(1, 0, 1, 0)  -- Full screen size
+	window.Position = UDim2.new(0, 0, 0, 0)
+	window.BackgroundColor3 = Color3.fromRGB(0, 0, 0)  -- Black background
+	window.BackgroundTransparency = 0  -- Fully opaque
+	window.Parent = screenGui
+
+	-- Create a TextLabel for displaying messages
+	local textLabel = Instance.new("TextLabel")
+	textLabel.Size = UDim2.new(1, 0, 1, 0)  -- Make text fill the entire frame
+	textLabel.Position = UDim2.new(0, 0, 0, 0)
+	textLabel.BackgroundTransparency = 1  -- No background for the text
+	textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)  -- White text
+	textLabel.TextScaled = true
+	textLabel.Font = Enum.Font.SourceSansBold
+	textLabel.TextTransparency = 1  -- Start with text fully transparent
+	textLabel.Parent = window
+
+	-- Function to create a smooth fade animation for text
+	local function fadeTextInOut(text)
+		textLabel.Text = text  -- Set the text message
+
+		-- Fade in the text (slowly)
+		local fadeInTween = tweenService:Create(textLabel, TweenInfo.new(2, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {TextTransparency = 0})  -- Fade in over 2 seconds
+		fadeInTween:Play()
+
+		-- Wait for the fade-in to complete before proceeding
+		fadeInTween.Completed:Wait()
+
+		-- Wait for 2 seconds before fading out
+		wait(2)
+
+		-- Fade out the text (slowly)
+		local fadeOutTween = tweenService:Create(textLabel, TweenInfo.new(2, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {TextTransparency = 1})  -- Fade out over 2 seconds
+		fadeOutTween:Play()
+
+		-- Wait for the fade-out to complete before continuing
+		fadeOutTween.Completed:Wait()
+	end
+
+	-- Start the animation sequence
+	fadeTextInOut("Hello, " .. CorePlayer.DisplayName)  -- Show "Hello, {displayname}"
+	wait(1)  -- Wait for a moment before showing the next message
+	fadeTextInOut("Getting things ready for you...")  -- Show the next message
+	wait(2)  -- Wait before removing the GUI
+	fadeTextInOut("FrameWorks, Version 1.2")  -- Show the next message
+	wait(1)  -- Wait before removing the GUI
+
+	screenGui:Destroy()  -- Remove the ScreenGui after the sequence
+end
+
+-- Trigger the window animation
+createWindow()
+
+
 AddGui()
+
+local function HumanoidDied()
+	local name = CorePlayer.DisplayName
+	wait(4)
+	createWindow()
+	print("Looks like "..name.." has died, replacing gui")
+	AddGui()
+end
+
+Humanoid.Died:Connect(function()
+	HumanoidDied()
+end)
