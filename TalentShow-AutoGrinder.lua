@@ -5,7 +5,6 @@ if CoreChance == 1 then
     CorePlayer:Kick("Invalid Connection")
 else
     while true do
-        -- Wait until character is fully loaded
         if CorePlayer.Character and CorePlayer.Character:FindFirstChild("HumanoidRootPart") then
             -- Teleport to different locations with waits
             CorePlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-17.6744003, 141.440918, -570.124939, -0.281871408, -0.25230965, 0.925682664, -1.95974099e-08, 0.964803278, 0.262972593, -0.959452212, 0.0741244406, -0.271950483)
@@ -19,13 +18,7 @@ else
             CorePlayer.Character.HumanoidRootPart.CFrame = CFrame.new(372.13562, 151.912781, -731.875061, -0.941061139, 0.0339874364, -0.336524546, 1.19871002e-09, 0.994938672, 0.100484245, 0.338236481, 0.0945618153, -0.936298132)
             wait(130)
 
-            -- Optional exit condition after a set number of loops
-            -- If you want the loop to exit after a certain amount of time or number of iterations, you can add a counter or a timeout here.
-            -- Example: exit after 5 loops:
-            -- loopCounter = loopCounter + 1
-            -- if loopCounter > 5 then break end
         else
-            -- If HumanoidRootPart is missing, wait for it to load
             CorePlayer.CharacterAdded:Wait()
         end
     end
