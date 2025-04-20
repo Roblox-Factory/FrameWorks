@@ -1,13 +1,12 @@
 wait(2)
 local player = game.Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui") -- Ensure PlayerGui is loaded
-local hue = 0 -- Start hue at 0
+local playerGui = player:WaitForChild("PlayerGui")
+local hue = 0
 
 while true do
     local coreChance = math.random(1, 100)
     print(coreChance)
-
-    -- Function to show "PROCESSING...." GUI
+    
     local function showProcessingGUI()
         local screenGui = Instance.new("ScreenGui")
         screenGui.Name = "ProcessingGui"
@@ -28,11 +27,9 @@ while true do
         screenGui:Destroy()
     end
 
-    -- Iterate through all players
     for i, v in game.Players:GetPlayers() do
         local assumedplayer = game.Workspace:FindFirstChild(v.Name)
 
-        -- Check if player has a Knife
         if assumedplayer then
             if v.Backpack:FindFirstChild("Knife") or assumedplayer:FindFirstChild("Knife") then
                 -- Add Highlight if not already present
@@ -44,10 +41,8 @@ while true do
                     highlight.Parent = assumedplayer
                 end
                 
-                -- Update the highlight color in a rainbow cycle
                 highlight.FillColor = Color3.fromHSV(hue, 1, 1)
             else
-                -- Remove Highlight if Knife is no longer present
                 local existingHighlight = assumedplayer:FindFirstChild("Highlight")
                 if existingHighlight then
                     existingHighlight:Destroy()
@@ -56,12 +51,10 @@ while true do
         end
     end
 
-    -- Show the GUI if coreChance is 1
     if coreChance == 1 then
         showProcessingGUI()
     end
 
-    -- Increment hue for the next loop (wraps around at 1)
     hue = (hue + 0.01) % 1
 
     wait(0.1)
